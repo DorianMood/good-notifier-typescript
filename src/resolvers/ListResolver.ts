@@ -1,18 +1,15 @@
 // src/resolvers/UserResolver.ts
 
-import { Arg, FieldResolver, Query, Resolver, Root } from "type-graphql";
+import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
 import { items, lists, ListData, ItemData } from "../data";
-import Item from "../schemas/Item";
 import List from "../schemas/List";
 
-@Resolver(of => Item)
+@Resolver(of => List)
 export default class {
     @Query(returns => [List], { nullable: true })
 
     lists(@Arg("id", {nullable: true}) id?: number, @Arg("user_id", {nullable: true}) user_id?: number) {
         let result: ListData[] = lists;
-
-        console.log(id, user_id);
 
         // Filter ID
         if (id !== undefined)
@@ -26,8 +23,18 @@ export default class {
 
     @FieldResolver()
     items(@Root() listData: ListData) {
-        return items.filter((items: ItemData) => {
-            return items.list_id === listData.id;
+        return items.filter((it: ItemData) => {
+            return it.list_id === listData.id;
         });
+    }
+    
+    @Mutation()
+    addList(@Arg("name") listName: string, @Arg("user_id") listUser: number) : boolean {
+        try {
+            lists.push({id: 123, name: listName, user_id: listUser});
+            return true;
+        } catch {
+            return false;
+        }
     }
 }

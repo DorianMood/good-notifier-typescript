@@ -17,9 +17,16 @@ type List {
   color: String!
 }
 
+type Mutation {
+  addUser(color: String, password: String!, name: String!): Boolean!
+  addItem(list: Float!, link: String!, name: String!): Boolean!
+  addList(user_id: Float!, name: String!): Boolean!
+}
+
 type Query {
-  userById(id: Float!): User
+  user(id: Float!): User
   items(list_id: Float, id: Float): [Item!]
+  lists(user_id: Float, id: Float): [List!]
 }
 
 type User {

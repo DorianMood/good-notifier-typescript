@@ -10,7 +10,7 @@ export interface UserData {
 export interface ListData {
   id: number;
   name: string;
-  items?: Item[];
+  items?: ItemData[];
   user_id: number;
 }
 
