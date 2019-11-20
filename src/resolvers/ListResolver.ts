@@ -37,4 +37,9 @@ export default class {
             return false;
         }
     }
+
+    @Mutation()
+    dropList(@Arg("id") listId: number) : boolean {
+        return true;
+    }
 }

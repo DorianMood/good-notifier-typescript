@@ -12,12 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "@types/ws": "^6.0.3",
+    "crypto": "^1.0.1",
     "graphql-yoga": "^1.18.3",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^0.17.5"
   },
   "devDependencies": {
     "@types/node": "^12.12.7",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2"
   }
 }

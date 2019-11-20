@@ -19,12 +19,16 @@ type List {
 
 type Mutation {
   addUser(color: String, password: String!, name: String!): Boolean!
+  dropUser(id: Float!): Boolean!
   addItem(list: Float!, link: String!, name: String!): Boolean!
+  dropItem(id: Float!): Boolean!
   addList(user_id: Float!, name: String!): Boolean!
+  dropList(id: Float!): Boolean!
 }
 
 type Query {
   user(id: Float!): User
+  hash: String!
   items(list_id: Float, id: Float): [Item!]
   lists(user_id: Float, id: Float): [List!]
 }

@@ -30,4 +30,10 @@ export default class {
             return false;
         }
     }
+
+    @Mutation()
+    dropItem(@Arg("id") itemId: number) : boolean {
+        
+        return true;
+    }
 }

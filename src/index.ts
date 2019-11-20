@@ -7,6 +7,8 @@ import UserResolver from "./resolvers/UserResolver";
 import ItemResolver from "./resolvers/ItemResolver";
 import ListResolver from "./resolvers/ListResolver";
 
+// TODO: add DELETE
+
 async function bootstrap() {
     const schema = await buildSchema({
         resolvers: [UserResolver, ItemResolver, ListResolver],
