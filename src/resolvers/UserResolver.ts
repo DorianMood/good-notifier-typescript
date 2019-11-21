@@ -5,9 +5,8 @@ import User from "../schemas/User";
 import { Users } from "../entity/Users";
 import { createHash } from "crypto";
 
-import { getConnectionManager, Connection, ConnectionManager } from "typeorm";
+import { getConnectionManager, Connection, ConnectionManager, getConnection } from "typeorm";
 import { Lists } from "../entity/Lists";
-import { users } from "../data";
 
 @Resolver(of => User)
 export default class {
@@ -59,6 +58,15 @@ export default class {
 
     @Mutation()
     dropUser(@Arg("id") userId: number) : boolean {
+        getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(Users)
+            .where("id = :id", {id: userId})
+            .execute();
+        
+        /// TODO : cascade delete all the lists of deleted user
+
         return true;
     }
 }

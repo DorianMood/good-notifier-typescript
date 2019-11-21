@@ -2,7 +2,7 @@
 
 import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
 import List from "../schemas/List";
-import { Connection, getConnectionManager } from "typeorm";
+import { Connection, getConnectionManager, getConnection } from "typeorm";
 import { Lists } from "../entity/Lists";
 import { Items } from "../entity/Items";
 
@@ -47,6 +47,7 @@ export default class {
             list.name = listName;
             list.user_id = listUser;
             conn.manager.save(list);
+            /// TODO : cascade delete all the items from deleted list
             return true;
         } catch {
             return false;
@@ -55,6 +56,12 @@ export default class {
 
     @Mutation()
     dropList(@Arg("id") listId: number): boolean {
+        getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(Lists)
+            .where("id = :id", {id: listId})
+            .execute();
         return true;
     }
 }

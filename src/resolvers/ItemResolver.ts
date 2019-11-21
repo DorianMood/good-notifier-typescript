@@ -2,7 +2,7 @@
 
 import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
 import Item from "../schemas/Item";
-import { getConnectionManager, Connection } from "typeorm";
+import { getConnectionManager, Connection, getConnection } from "typeorm";
 import { Items } from "../entity/Items";
 
 @Resolver(of => Item)
@@ -44,7 +44,12 @@ export default class {
 
     @Mutation()
     dropItem(@Arg("id") itemId: number) : boolean {
-        
+        getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(Items)
+            .where("id = :id", {id: itemId})
+            .execute();
         return true;
     }
 }
