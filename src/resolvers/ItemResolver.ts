@@ -29,7 +29,13 @@ export default class {
     @Mutation()
     addItem(@Arg("name") itemName: string, @Arg("link") itemLink: string, @Arg("list") itemList: number) : boolean {
         try {
-            //items.push({id: 123, name: itemName, link: itemLink, list_id: itemList});
+            // Get connection created in index.ts
+            let conn: Connection = getConnectionManager().get("default");
+            const item: Items = new Items();
+            item.link = itemLink;
+            item.name = itemName;
+            item.list_id = itemList;
+            conn.manager.save(item);
             return true;
         } catch {
             return false;

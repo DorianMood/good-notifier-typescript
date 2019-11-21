@@ -18,7 +18,7 @@ type List {
 }
 
 type Mutation {
-  addUser(color: String, password: String!, name: String!): Boolean!
+  addUser(color: String, name: String!): Boolean!
   dropUser(id: Float!): Boolean!
   addItem(list: Float!, link: String!, name: String!): Boolean!
   dropItem(id: Float!): Boolean!

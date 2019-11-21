@@ -9,7 +9,7 @@ import { Items } from "../entity/Items";
 @Resolver(of => List)
 export default class {
     @Query(returns => [List], { nullable: true })
-    async lists(@Arg("id", {nullable: true}) id?: number, @Arg("user_id", {nullable: true}) user_id?: number) {
+    async lists(@Arg("id", { nullable: true }) id?: number, @Arg("user_id", { nullable: true }) user_id?: number) {
         // Get connection, created in index.ts
         let conn: Connection = getConnectionManager().get("default");
 
@@ -36,11 +36,17 @@ export default class {
         });
         return items;
     }
-    
+
     @Mutation()
     addList(@Arg("name") listName: string, @Arg("user_id") listUser: number) : boolean {
         try {
-            // lists.push({id: 123, name: listName, user_id: listUser});
+            // Get connection created in index.ts
+            let conn: Connection = getConnectionManager().get("default");
+            //Create new list
+            const list: Lists = new Lists();
+            list.name = listName;
+            list.user_id = listUser;
+            conn.manager.save(list);
             return true;
         } catch {
             return false;
@@ -48,7 +54,7 @@ export default class {
     }
 
     @Mutation()
-    dropList(@Arg("id") listId: number) : boolean {
+    dropList(@Arg("id") listId: number): boolean {
         return true;
     }
 }

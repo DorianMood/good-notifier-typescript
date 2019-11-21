@@ -5,8 +5,9 @@ import User from "../schemas/User";
 import { Users } from "../entity/Users";
 import { createHash } from "crypto";
 
-import { getConnectionManager, Connection } from "typeorm";
+import { getConnectionManager, Connection, ConnectionManager } from "typeorm";
 import { Lists } from "../entity/Lists";
+import { users } from "../data";
 
 @Resolver(of => User)
 export default class {
@@ -38,11 +39,18 @@ export default class {
     @Mutation()
     addUser(
         @Arg("name") userName: string,
-        @Arg("password") userPassword: string,
         @Arg("color", {nullable: true}) userColor?: string
     ) : boolean {
         try {
-            //users.push({id: 123, name: userName, password: userPassword, color: userColor});
+            // Get connection created in index.ts
+            let conn: Connection = getConnectionManager().get("default");
+            //Create new user
+            /// TODO : account_code verification
+            const user: Users = new Users();
+            user.name = userName;
+            user.color = userColor ? userColor : "#000000";
+            user.account_code = this.getHash();
+            conn.manager.save(user);
             return true;
         } catch {
             return false;
