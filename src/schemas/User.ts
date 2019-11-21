@@ -10,7 +10,7 @@ export default class User {
     name: string;
 
     @Field()
-    password: string;
+    account_code: string;
 
     @Field()
     color: string;

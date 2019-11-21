@@ -1,31 +1,35 @@
 // src/resolvers/UserResolver.ts
 
 import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
-import { items, users, lists, ListData, ItemData } from "../data";
 import Item from "../schemas/Item";
+import { getConnectionManager, Connection } from "typeorm";
+import { Items } from "../entity/Items";
 
 @Resolver(of => Item)
 export default class {
     @Query(returns => [Item], { nullable: true })
 
-    items(@Arg("id", {nullable: true}) id?: number, @Arg("list_id", {nullable: true}) list_id?: number) {
-        let result: ItemData[] = items;
+    async items(@Arg("id", {nullable: true}) id?: number, @Arg("list_id", {nullable: true}) list_id?: number) {
+        let conn: Connection = getConnectionManager().get("default");
 
-        // Filter ID
-        if (id !== undefined)
-            result = result.filter((item: ItemData) => item.id === id);
-
-        // Filter List ID
-        if (list_id !== undefined)
-            result = result.filter((item: ItemData) => item.list_id === list_id);
-        return result;
-        
+        if (id) {
+            let items: Items[] = await conn.getRepository(Items).find({
+                id: id
+            });
+            return items;
+        } else if (list_id) {
+            let items: Items[] = await conn.getRepository(Items).find({
+                list_id: list_id
+            });
+            return items;
+        }
+        return [null];
     }
 
     @Mutation()
     addItem(@Arg("name") itemName: string, @Arg("link") itemLink: string, @Arg("list") itemList: number) : boolean {
         try {
-            items.push({id: 123, name: itemName, link: itemLink, list_id: itemList});
+            //items.push({id: 123, name: itemName, link: itemLink, list_id: itemList});
             return true;
         } catch {
             return false;

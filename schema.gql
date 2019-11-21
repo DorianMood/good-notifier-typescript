@@ -35,7 +35,7 @@ type Query {
 type User {
   id: Int!
   name: String!
-  password: String!
+  account_code: String!
   color: String!
   lists: [List!]!
 }

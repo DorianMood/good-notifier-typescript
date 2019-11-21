@@ -1,37 +1,46 @@
 // src/resolvers/UserResolver.ts
 
 import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
-import { items, lists, ListData, ItemData } from "../data";
 import List from "../schemas/List";
+import { Connection, getConnectionManager } from "typeorm";
+import { Lists } from "../entity/Lists";
+import { Items } from "../entity/Items";
 
 @Resolver(of => List)
 export default class {
     @Query(returns => [List], { nullable: true })
+    async lists(@Arg("id", {nullable: true}) id?: number, @Arg("user_id", {nullable: true}) user_id?: number) {
+        // Get connection, created in index.ts
+        let conn: Connection = getConnectionManager().get("default");
 
-    lists(@Arg("id", {nullable: true}) id?: number, @Arg("user_id", {nullable: true}) user_id?: number) {
-        let result: ListData[] = lists;
-
-        // Filter ID
-        if (id !== undefined)
-            result = result.filter((item: ListData) => item.id === id);
-
-        // Filter List ID
-        if (user_id !== undefined)
-            result = result.filter((item: ListData) => item.user_id === user_id);
-        return result;
+        // Fetch list and return it
+        if (id) {
+            const list = await conn.getRepository(Lists).findOne({
+                id: id
+            });
+            return list ? [list] : null;
+        } else if (user_id) {
+            const lists: Lists[] = await conn.getRepository(Lists).find({
+                user_id: user_id
+            });
+            return lists;
+        }
+        return null;
     }
 
     @FieldResolver()
-    items(@Root() listData: ListData) {
-        return items.filter((it: ItemData) => {
-            return it.list_id === listData.id;
+    async items(@Root() listData: Lists) {
+        let conn: Connection = getConnectionManager().get("default");
+        let items: Items[] = await conn.getRepository(Items).find({
+            list_id: listData.id
         });
+        return items;
     }
     
     @Mutation()
     addList(@Arg("name") listName: string, @Arg("user_id") listUser: number) : boolean {
         try {
-            lists.push({id: 123, name: listName, user_id: listUser});
+            // lists.push({id: 123, name: listName, user_id: listUser});
             return true;
         } catch {
             return false;

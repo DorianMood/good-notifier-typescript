@@ -1,16 +1,23 @@
 // src/resolvers/UserResolver.ts
 
 import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
-import { users, lists, UserData, ListData } from "../data";
 import User from "../schemas/User";
+import { Users } from "../entity/Users";
 import { createHash } from "crypto";
+
+import { getConnectionManager, Connection } from "typeorm";
+import { Lists } from "../entity/Lists";
 
 @Resolver(of => User)
 export default class {
     @Query(returns => User, { nullable: true })
     user(@Arg("id") id: number) {
-        let hash = this.getHash();
-        return users.find((user: UserData) => user.id === id);
+        // Get connection, created in index.ts
+        let conn: Connection = getConnectionManager().get("default");
+
+        // Fetch user and return it
+        const user = conn.getRepository(Users).findOne(id);
+        return user;
     }
 
     getHash() : string {
@@ -20,10 +27,12 @@ export default class {
     }
 
     @FieldResolver()
-    lists(@Root() userData: UserData) {
-        return lists.filter((list: ListData) => {
-            return list.user_id === userData.id;
-        });
+    async lists(@Root() userData: Users) {
+        let conn: Connection = getConnectionManager().get("default");
+        let lists: Lists[] = await conn.getRepository(Lists).find({
+            user_id: userData.id
+        })
+        return lists;
     }
 
     @Mutation()
@@ -33,7 +42,7 @@ export default class {
         @Arg("color", {nullable: true}) userColor?: string
     ) : boolean {
         try {
-            users.push({id: 123, name: userName, password: userPassword, color: userColor});
+            //users.push({id: 123, name: userName, password: userPassword, color: userColor});
             return true;
         } catch {
             return false;
