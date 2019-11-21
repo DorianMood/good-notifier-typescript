@@ -19,6 +19,7 @@ export default class {
         if (list_id !== undefined)
             result = result.filter((item: ItemData) => item.list_id === list_id);
         return result;
+        
     }
 
     @Mutation()

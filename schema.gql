@@ -28,7 +28,6 @@ type Mutation {
 
 type Query {
   user(id: Float!): User
-  hash: String!
   items(list_id: Float, id: Float): [Item!]
   lists(user_id: Float, id: Float): [List!]
 }
