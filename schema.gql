@@ -24,12 +24,21 @@ type Mutation {
   dropItem(id: Float!): Boolean!
   addList(user_id: Float!, name: String!): Boolean!
   dropList(id: Float!): Boolean!
+  drop_token(user_id: Float!): Boolean!
 }
 
 type Query {
   user(id: Float!): User
   items(list_id: Float, id: Float): [Item!]
   lists(user_id: Float, id: Float): [List!]
+  auth(login_code: String!): Token
+}
+
+type Token {
+  id: Int!
+  token: String!
+  user_id: Float!
+  expires: String!
 }
 
 type User {

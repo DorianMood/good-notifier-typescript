@@ -1,6 +1,6 @@
 // src/resolvers/UserResolver.ts
 
-import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
+import { Arg, FieldResolver, Query, Resolver, Root, Mutation, Authorized } from "type-graphql";
 import Item from "../schemas/Item";
 import { getConnectionManager, Connection, getConnection } from "typeorm";
 import { Items } from "../entity/Items";
@@ -9,6 +9,7 @@ import { Items } from "../entity/Items";
 export default class {
     @Query(returns => [Item], { nullable: true })
 
+    @Authorized()
     async items(@Arg("id", {nullable: true}) id?: number, @Arg("list_id", {nullable: true}) list_id?: number) {
         let conn: Connection = getConnectionManager().get("default");
 

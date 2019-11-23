@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/ws": "^6.0.3",
     "crypto": "^1.0.1",
+    "graphql-middleware": "^4.0.2",
     "graphql-yoga": "^1.18.3",
     "pg": "^7.14.0",
     "reflect-metadata": "^0.1.13",

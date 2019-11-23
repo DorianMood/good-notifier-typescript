@@ -8,13 +8,16 @@ import UserResolver from "./resolvers/UserResolver";
 import ItemResolver from "./resolvers/ItemResolver";
 import ListResolver from "./resolvers/ListResolver";
 import { createConnection } from "typeorm";
+import { authChecker } from "./utils/AuthChecker";
+import AuthResolver from "./resolvers/AuthResolver";
 
 // TODO: add DELETE
 
 async function bootstrap() {
     const schema = await buildSchema({
-        resolvers: [UserResolver, ItemResolver, ListResolver],
+        resolvers: [UserResolver, ItemResolver, ListResolver, AuthResolver],
         emitSchemaFile: true,
+        authChecker: authChecker
     });
 
     const server = new GraphQLServer({
