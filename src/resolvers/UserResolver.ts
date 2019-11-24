@@ -1,15 +1,17 @@
 // src/resolvers/UserResolver.ts
 
-import { Arg, FieldResolver, Query, Resolver, Root, Mutation } from "type-graphql";
+import { Arg, FieldResolver, Query, Resolver, Root, Mutation, Authorized } from "type-graphql";
 import User from "../schemas/User";
 import { Users } from "../entity/Users";
 import { createHash } from "crypto";
 
-import { getConnectionManager, Connection, ConnectionManager, getConnection } from "typeorm";
+import { getConnectionManager, Connection, getConnection } from "typeorm";
 import { Lists } from "../entity/Lists";
 
 @Resolver(of => User)
 export default class {
+
+    @Authorized()
     @Query(returns => User, { nullable: true })
     user(@Arg("id") id: number) {
         // Get connection, created in index.ts
@@ -56,6 +58,7 @@ export default class {
         }
     }
 
+    @Authorized()
     @Mutation()
     dropUser(@Arg("id") userId: number) : boolean {
         getConnection()

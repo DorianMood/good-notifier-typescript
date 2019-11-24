@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
     name: "tokens"

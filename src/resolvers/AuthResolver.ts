@@ -5,13 +5,14 @@ import { Tokens } from "../entity/Tokens";
 import Token, { TTL } from "../schemas/Token";
 import { createHash } from "crypto";
 
-import { getConnectionManager, Connection, getConnection, DeleteResult, getRepository } from "typeorm";
+import { getConnectionManager, Connection, getConnection, getRepository } from "typeorm";
 import { Users } from "../entity/Users";
 
 @Resolver(of => Token)
 export default class {
+
     @Query(returns => Token, { nullable: true })
-    async auth(@Arg("login_code") accountCode: string) {
+    async getToken(@Arg("loginCode") accountCode: string) {
         // Get connection, created in index.ts
         let conn: Connection = getConnectionManager().get("default");
 
@@ -21,11 +22,10 @@ export default class {
             let found = await getRepository(Tokens).findOne({ user_id: user.id });
             // check if token for such user exists
             if (found)
-                await this.drop_token(found.user_id);
+                await this.dropToken(found.user_id);
             console.log("found user")
             // create new token and return it back to user
             let token: Tokens = new Tokens();
-            token.id = 1;
             token.user_id = user.id;
             token.expires = new Date(Date.now() + TTL).valueOf().toString();
             let hash: string = this.getHash();
@@ -38,19 +38,16 @@ export default class {
         }
     }
 
-
-
-
     // TODO : разобраться с этими типами
-    @Mutation()
-    async drop_token(@Arg("user_id") id: number) : Promise<DeleteResult> {
+    @Mutation(returns => Token)
+    async dropToken(@Arg("userId") id: number)  {
         let result = await getConnection()
             .createQueryBuilder()
             .delete()
             .from(Tokens)
             .where("user_id = :user_id", { user_id: id})
             .execute();
-        return result;
+        return result ? null : null;
     }
 
     getHash() : string {

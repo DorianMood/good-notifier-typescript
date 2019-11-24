@@ -9,8 +9,8 @@ interface IUser {
     roles: string[];
 }
 
-interface IContext {
-    user?: IUser;
+export interface IContext {
+    token?: string;
 }
 
 export const authChecker: AuthChecker<IContext> = async (
@@ -18,15 +18,20 @@ export const authChecker: AuthChecker<IContext> = async (
     roles
 ) => {
     console.log(context);
-    if (!context.user) {
+    if (!context.token) {
         return false;
     } else {
-        let found: boolean = await getConnection()
+        let items: Tokens[] = await getConnection()
             .createQueryBuilder()
             .select()
             .from(Tokens, "tokens")
-            .where("token = :token", { token: context.user.token })
-            .getCount() > 0;
-        return found;
+            .where("token = :token", { token: context.token })
+            .execute();
+        console.log(
+            items,
+            Date.now(),
+            Number.parseInt(items[0].expires)
+            );
+        return items.length > 0 ? Number.parseInt(items[0].expires) >= Date.now() : false;
     }
 };

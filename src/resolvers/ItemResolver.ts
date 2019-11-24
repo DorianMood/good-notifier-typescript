@@ -10,7 +10,7 @@ export default class {
     @Query(returns => [Item], { nullable: true })
 
     @Authorized()
-    async items(@Arg("id", {nullable: true}) id?: number, @Arg("list_id", {nullable: true}) list_id?: number) {
+    async items(@Arg("id", {nullable: true}) id?: number, @Arg("listId", {nullable: true}) listId?: number) {
         let conn: Connection = getConnectionManager().get("default");
 
         if (id) {
@@ -18,15 +18,16 @@ export default class {
                 id: id
             });
             return items;
-        } else if (list_id) {
+        } else if (listId) {
             let items: Items[] = await conn.getRepository(Items).find({
-                list_id: list_id
+                list_id: listId
             });
             return items;
         }
         return [null];
     }
 
+    @Authorized()
     @Mutation()
     addItem(@Arg("name") itemName: string, @Arg("link") itemLink: string, @Arg("list") itemList: number) : boolean {
         try {
@@ -43,6 +44,7 @@ export default class {
         }
     }
 
+    @Authorized()
     @Mutation()
     dropItem(@Arg("id") itemId: number) : boolean {
         getConnection()

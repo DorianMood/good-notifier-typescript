@@ -22,20 +22,20 @@ type Mutation {
   dropUser(id: Float!): Boolean!
   addItem(list: Float!, link: String!, name: String!): Boolean!
   dropItem(id: Float!): Boolean!
-  addList(user_id: Float!, name: String!): Boolean!
+  addList(userId: Float!, name: String!): Boolean!
   dropList(id: Float!): Boolean!
-  drop_token(user_id: Float!): Boolean!
+  dropToken(userId: Float!): Token!
 }
 
 type Query {
   user(id: Float!): User
-  items(list_id: Float, id: Float): [Item!]
-  lists(user_id: Float, id: Float): [List!]
-  auth(login_code: String!): Token
+  items(listId: Float, id: Float): [Item!]
+  lists(userId: Float, id: Float): [List!]
+  getToken(loginCode: String!): Token
 }
 
 type Token {
-  id: Int!
+  id: Int
   token: String!
   user_id: Float!
   expires: String!

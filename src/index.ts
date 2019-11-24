@@ -8,7 +8,7 @@ import UserResolver from "./resolvers/UserResolver";
 import ItemResolver from "./resolvers/ItemResolver";
 import ListResolver from "./resolvers/ListResolver";
 import { createConnection } from "typeorm";
-import { authChecker } from "./utils/AuthChecker";
+import { authChecker, IContext } from "./utils/AuthChecker";
 import AuthResolver from "./resolvers/AuthResolver";
 
 // TODO: add DELETE
@@ -22,6 +22,12 @@ async function bootstrap() {
 
     const server = new GraphQLServer({
         schema,
+        context: ({ request }) : IContext => {
+            const context = {
+                token: request.headers.authorization
+            }
+            return context;
+        }
     });
 
     createConnection().then(conn => {

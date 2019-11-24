@@ -5,8 +5,8 @@ export const TTL = DAY * 30; // DAYS
 
 @ObjectType()
 export default class Token {
-    @Field(type => Int)
-    id: number;
+    @Field(type => Int, { nullable: true })
+    id?: number;
 
     @Field()
     token: string;
