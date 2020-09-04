@@ -23,7 +23,7 @@
     "graphql-yoga": "^1.18.3",
     "pg": "^7.14.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.5"
+    "type-graphql": "^0.17.6"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
